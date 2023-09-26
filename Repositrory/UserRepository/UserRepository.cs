@@ -45,7 +45,7 @@ namespace uni_project.Repositrory.UserRepository
                 return new BaseResponseModel(true, false, new MessageModel("لطفا نام خانوادگی خود را وارد کنید"));
             }
 
-            if (_validation.NationalValidation(userModel.NationalCode) || userModel.NationalCode == "string")
+            if (!_validation.NationalValidation(userModel.NationalCode) || userModel.NationalCode == "string")
             {
                 return new BaseResponseModel(true, false, new MessageModel("لطفا کد ملی صحیح وارد کنید"));
             }
