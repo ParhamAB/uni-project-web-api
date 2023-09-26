@@ -20,58 +20,60 @@ namespace uni_project.Repositrory.UserRepository
             _validation = validation;
         }
 
-        public BaseResponseModel GetAllUsers(string name,string nationalCode,int page,int offset)
+        public BaseResponseModel GetAllUsers(string name, string nationalCode, int page, int offset)
         {
             try
             {
                 IEnumerable<UserModel> result = _userDB.GetUsers(name, nationalCode, page, offset);
-                return new BaseResponseModel(false, true, result);
-            }catch(Exception ex) 
-            {
-                return new BaseResponseModel(true, false, new MessageModel(ex.ToString()));
+                return new BaseResponseModel(true, result);
             }
-            
+            catch (Exception ex)
+            {
+                return new BaseResponseModel(false, new MessageModel(ex.ToString()));
+            }
+
         }
 
         public BaseResponseModel AddUser(AddUserModel userModel)
         {
             if (string.IsNullOrEmpty(userModel.FirstName) || userModel.FirstName == "string")
             {
-                return new BaseResponseModel(true, false, new MessageModel("لطفا نام خود را وارد کنید"));
+                return new BaseResponseModel(false, new MessageModel("لطفا نام خود را وارد کنید"));
             }
 
             if (string.IsNullOrEmpty(userModel.LastName) || userModel.LastName == "string")
             {
-                return new BaseResponseModel(true, false, new MessageModel("لطفا نام خانوادگی خود را وارد کنید"));
+                return new BaseResponseModel(false, new MessageModel("لطفا نام خانوادگی خود را وارد کنید"));
             }
 
             if (!_validation.NationalValidation(userModel.NationalCode) || userModel.NationalCode == "string")
             {
-                return new BaseResponseModel(true, false, new MessageModel("لطفا کد ملی صحیح وارد کنید"));
+                return new BaseResponseModel(false, new MessageModel("لطفا کد ملی صحیح وارد کنید"));
             }
 
             if (_validation.IsMobileNumber(userModel.PhoneNumber) || userModel.PhoneNumber == "string")
             {
-                return new BaseResponseModel(true, false, new MessageModel("لطفا شماره تلفن صحیح وارد کنید"));
-            }   
+                return new BaseResponseModel(false, new MessageModel("لطفا شماره تلفن صحیح وارد کنید"));
+            }
 
             if (string.IsNullOrEmpty(userModel.Job) || userModel.Job == "string")
             {
-                return new BaseResponseModel(true, false, new MessageModel("لطفا شغل را وارد کنید"));
+                return new BaseResponseModel(false, new MessageModel("لطفا شغل را وارد کنید"));
             }
 
             if (string.IsNullOrEmpty(userModel.FieldofStudy) || userModel.FieldofStudy == "string")
             {
-                return new BaseResponseModel(true, false, new MessageModel("لطفا رشته و محل تحصیل خود را وارد کنید"));
+                return new BaseResponseModel(false, new MessageModel("لطفا رشته و محل تحصیل خود را وارد کنید"));
             }
             try
             {
+                userModel.PhoneNumber = _validation.ConvertToZeroNumberFormat(userModel.PhoneNumber);
                 AddModel result = _userDB.AddUser(userModel);
-                return new BaseResponseModel(false, true, result);
+                return new BaseResponseModel(true, result);
             }
             catch (Exception ex)
             {
-                return new BaseResponseModel(true, false, new MessageModel(ex.ToString()));
+                return new BaseResponseModel(false, new MessageModel(ex.ToString()));
             }
         }
     }
