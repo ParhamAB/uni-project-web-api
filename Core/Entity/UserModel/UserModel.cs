@@ -8,11 +8,9 @@ namespace uni_project.Core.Entity.UserModel
         public Guid Id { get; set; }
 
         [Required]
-        [StringLength(20)]
         public string FirstName { get; set; }
 
         [Required]
-        [StringLength(40)]
         public string LastName { get; set; }
 
         [Required]
@@ -24,17 +22,13 @@ namespace uni_project.Core.Entity.UserModel
         public string NationalCode { get; set; }
 
         [Required]
-        [StringLength(40)]
         public string FieldofStudy { get; set; }
 
-        [StringLength(200)]
         public string LastDocument { get; set; }
 
         [Required]
-        [StringLength(20)]
         public string Job { get; set; }
 
-        [StringLength(300)]
         public string JobAddress { get; set; }
 
         public UserModel() { }
