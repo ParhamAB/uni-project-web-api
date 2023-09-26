@@ -14,7 +14,7 @@ namespace uni_project.Core.Entity.UserModel
         public string LastName { get; set; }
 
         [Required]
-        [StringLength(11)]
+        [StringLength(15)]
         public string PhoneNumber { get; set; }
 
         [Required]

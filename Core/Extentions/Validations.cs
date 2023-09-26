@@ -18,12 +18,16 @@ namespace uni_project.Core.Extentions
 
         public bool IsMobileNumber(string mobile)
         {
-            return !Regex.IsMatch(mobile, @"^(\+989|09)\d{9}$");
+            return !Regex.IsMatch(mobile, @"^(\+989|09|00)\d{9}$");
         }
 
         public string ConvertToZeroNumberFormat(string mobile)
         {
             if (mobile.StartsWith("+98"))
+            {
+                return "0" + mobile.Substring(3);
+            }
+            if (mobile.StartsWith("00"))
             {
                 return "0" + mobile.Substring(3);
             }
