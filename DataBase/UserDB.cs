@@ -34,10 +34,9 @@ namespace uni_project.DataBase
                         );
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                string exe = ex.ToString();
-                return [];
+                return new List<UserModel>();
             }
 
         }
