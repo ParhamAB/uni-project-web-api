@@ -1,9 +1,12 @@
 ﻿using System.Text.RegularExpressions;
-using uni_project.Core.Entity.AddUserModel;
 using uni_project.Core.Entity.ReturnModels;
 using uni_project.Core.Entity.ReturnModels.AddModel;
+using uni_project.Core.Entity.ReturnModels.EditModel;
 using uni_project.Core.Entity.ReturnModels.MessageModel;
-using uni_project.Core.Entity.UserModel;
+using uni_project.Core.Entity.User.AddUserModel;
+using uni_project.Core.Entity.User.UserModel;
+using uni_project.Core.Entity.UserModels.GetUserByNationalResponse;
+using uni_project.Core.Entity.UserModels.NationalCodeModel;
 using uni_project.Core.Extentions;
 using uni_project.DataBase;
 
@@ -32,6 +35,32 @@ namespace uni_project.Repositrory.UserRepository
                 return new BaseResponseModel(false, new MessageModel(ex.ToString()));
             }
 
+        }
+
+        public BaseResponseModel GetUserByNationalCode(NationalCodeModel userModel)
+        {
+
+            if (!_validation.NationalValidation(userModel.NationalCode) || userModel.NationalCode == "string")
+            {
+                return new BaseResponseModel(false, new MessageModel("لطفا کد ملی صحیح وارد کنید"));
+            }
+
+            try
+            {
+                GetUserByNationalResponse result = _userDB.GetUserByNationalCode(userModel);
+                if(result != null)
+                {
+                    return new BaseResponseModel(true, result);
+                }
+                else
+                {
+                    return new BaseResponseModel(false, new MessageModel("کاربری با این کد ملی وجود ندارد."));
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseModel(false, new MessageModel(ex.ToString()));
+            }
         }
 
         public BaseResponseModel AddUser(AddUserModel userModel)
@@ -68,7 +97,7 @@ namespace uni_project.Repositrory.UserRepository
             try
             {
                 userModel.PhoneNumber = _validation.ConvertToZeroNumberFormat(userModel.PhoneNumber);
-                AddModel result = _userDB.AddUser(userModel);
+                EditModel result = _userDB.AddUser(userModel);
                 return new BaseResponseModel(true, result);
             }
             catch (Exception ex)

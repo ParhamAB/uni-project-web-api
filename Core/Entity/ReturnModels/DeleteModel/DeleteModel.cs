@@ -4,5 +4,11 @@
     {
         public bool IsDeleted { get; set; }
         public string Message { get; set; }
+
+        public DeleteModel(bool isDeleted, string message)
+        {
+            IsDeleted = isDeleted;
+            Message = message;
+        }
     }
 }

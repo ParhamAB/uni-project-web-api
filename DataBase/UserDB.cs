@@ -1,9 +1,15 @@
 ﻿using Dapper;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Server.IIS.Core;
 using System.Data;
 using System.Data.SqlClient;
-using uni_project.Core.Entity.AddUserModel;
+using System.Xml.Linq;
 using uni_project.Core.Entity.ReturnModels.AddModel;
-using uni_project.Core.Entity.UserModel;
+using uni_project.Core.Entity.ReturnModels.EditModel;
+using uni_project.Core.Entity.User.AddUserModel;
+using uni_project.Core.Entity.User.UserModel;
+using uni_project.Core.Entity.UserModels.GetUserByNationalResponse;
+using uni_project.Core.Entity.UserModels.NationalCodeModel;
 
 namespace uni_project.DataBase
 {
@@ -22,7 +28,7 @@ namespace uni_project.DataBase
                 using (SqlConnection sql = _connection.GetConnection())
                 {
                     return sql.Query<UserModel>(
-                            "GetAllUsers",
+                            "User_GetAllUsers",
                             new
                             {
                                 NationalCodeSearch = nationalCode,
@@ -34,14 +40,36 @@ namespace uni_project.DataBase
                         );
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new List<UserModel>();
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        public GetUserByNationalResponse GetUserByNationalCode(NationalCodeModel nationalCodeModel)
+        {
+            try
+            {
+                using (SqlConnection sql = _connection.GetConnection())
+                {
+                    return sql.QueryFirstOrDefault<GetUserByNationalResponse>(
+                            "User_GetNamesByNationalCode",
+                            new
+                            {
+                                nationalCodeModel.NationalCode
+                            },
+                            commandType: CommandType.StoredProcedure
+                        );
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
             }
 
         }
 
-        public AddModel AddUser(AddUserModel addUserModel)
+        public EditModel AddUser(AddUserModel addUserModel)
         {
             try
             {
@@ -56,27 +84,21 @@ namespace uni_project.DataBase
                     parameters.Add("LastDocument", addUserModel.LastDocument);
                     parameters.Add("Job", addUserModel.Job);
                     parameters.Add("JobAddress", addUserModel.JobAddress);
-                    parameters.Add("Message", dbType: DbType.String, direction: ParameterDirection.Output, size: 255); // Adjust the size as needed
+                    parameters.Add("Message", dbType: DbType.String, direction: ParameterDirection.Output, size: 30);
+                    parameters.Add("isUpdated", dbType: DbType.Boolean, direction: ParameterDirection.Output);
 
-                    sql.Execute("InsertUser", parameters, commandType: CommandType.StoredProcedure);
+                    sql.Execute("User_InsertUser", parameters, commandType: CommandType.StoredProcedure);
 
                     string message = parameters.Get<string>("Message");
+                    bool isUpdated = parameters.Get<bool>("isUpdated");
 
-                    if (string.IsNullOrEmpty(message))
-                    {
-                        return new AddModel(true, "added successfully");
-                    }
-                    else
-                    {
-                        return new AddModel(false, message);
-                    }
+                    return new EditModel(isUpdated, message);
                 }
             }
             catch (Exception ex)
             {
-                return new AddModel(false, ex.ToString());
+                return new EditModel(false, ex.ToString());
             }
-
         }
     }
 }
