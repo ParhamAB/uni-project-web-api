@@ -21,6 +21,8 @@ namespace uni_project.Core.Entity.User.AddUserModel
         [Required]
         public string FieldofStudy { get; set; }
 
+        public string Email { get; set; }
+
         public string LastDocument { get; set; }
 
         [Required]
@@ -35,6 +37,7 @@ namespace uni_project.Core.Entity.User.AddUserModel
         string nationalCode,
         string fieldOfStudy,
         string job,
+        string email,
         string? lastDocument = null,
         string? jobAddress = null)
         {
@@ -44,6 +47,7 @@ namespace uni_project.Core.Entity.User.AddUserModel
             NationalCode = nationalCode;
             FieldofStudy = fieldOfStudy;
             Job = job;
+            Email = email;
             LastDocument = lastDocument;
             JobAddress = jobAddress;
         }
