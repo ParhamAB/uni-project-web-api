@@ -98,7 +98,8 @@ namespace uni_project.Repositrory.UserRepository
             {
                 userModel.PhoneNumber = _validation.ConvertToZeroNumberFormat(userModel.PhoneNumber);
                 EditModel result = _userDB.AddUser(userModel);
-                return new BaseResponseModel(true, result);
+                return new BaseResponseModel(result.IsEdited, result);
+
             }
             catch (Exception ex)
             {

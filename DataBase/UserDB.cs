@@ -83,6 +83,7 @@ namespace uni_project.DataBase
                     parameters.Add("FieldofStudy", addUserModel.FieldofStudy);
                     parameters.Add("LastDocument", addUserModel.LastDocument);
                     parameters.Add("Job", addUserModel.Job);
+                    parameters.Add("Email", addUserModel.Email);
                     parameters.Add("JobAddress", addUserModel.JobAddress);
                     parameters.Add("Message", dbType: DbType.String, direction: ParameterDirection.Output, size: 30);
                     parameters.Add("isUpdated", dbType: DbType.Boolean, direction: ParameterDirection.Output);
